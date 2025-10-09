@@ -1,0 +1,22 @@
+name: Deadline Notification
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日 UTC 00:00 にチェック（必要なら変更）
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deadline (echo only)
+        run: |
+          deadline="2025-11-21 16:20"
+          today=$(date -u +'%Y-%m-%d %H:%M')
+          d1=$(date -d "$deadline" +%s)
+          d2=$(date -d "$today" +%s)
+          diff=$(( (d1 - d2) / 86400 ))
+          if [ $diff -eq 3 ]; then
+            echo "📢 Week7 提出期限まであと3日です！（2025-11-21 16:20 JST想定）"
+          else
+            echo "Days left: $diff"
+          fi
